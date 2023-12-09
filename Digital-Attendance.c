@@ -15,3 +15,12 @@ struct Mahasiswa {
     int dataKehadiran[MAX_MURID];
     char dosen[MAX_KELAS][50];
 };
+
+struct nimNamaData {
+    int nim;
+    char nama[50];
+};
+
+struct Dosen {
+    char nama[50];
+};
