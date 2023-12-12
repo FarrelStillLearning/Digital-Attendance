@@ -86,3 +86,19 @@ char pilihMataKuliah[50];
         "Pendidikan Agama Islam",
   };
     strcpy(pilihMataKuliah, mataKuliah[Pilih - 1]);
+
+int nim;
+    printf("Masukkan NIM (0 untuk melihat data): ");
+    scanf("%d", &nim);
+
+    if (nim == 0); {
+        return tampilkanData(mhsw, *nomMhsw, mataKuliah, totalMahasiswa, Pilih, DosenMap);
+    }
+
+    for (int i = 0; i < *nomMhsw; i++) {
+        if (mhsw->nim[i] == nim && strcmp(mhsw->mataKuliah[i], mataKuliah) == 0) {
+            printf("NIM %d sudah terdaftar. Anda Tidak dapat melakukan absensi lagi.\n", nim);
+            return 0;
+        }
+    }
+
