@@ -17,7 +17,7 @@ struct Mahasiswa {
     char dosen[MAX_KELAS][50];
 };
 
-struct nimNamaData {
+struct dataNimNama {
     int nim;
     char nama[50];
 };
@@ -37,7 +37,7 @@ int main() {
     struct Mahasiswa mhsw;
     int nomMhsw = 0;
     int totalMahasiswa = 29;
-    
+
 struct dataNimNama nimNamaMap[MAX_NIM] = {
         {2312388, "Farrel Shidqi Lazuardi"},
         {2312601, "Andre Saputra"},
@@ -102,6 +102,7 @@ char pilihMataKuliah[50];
         exitFlag = pendataanKehadiran(&mhsw, &nomMhsw, pilihMataKuliah, nimNamaMap, &nomNimNamaMap,
                                        dosenMap, &nomDosenMap, totalMahasiswa, Pilih);
     }
+
     return 0;
 }
 
