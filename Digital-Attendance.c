@@ -5,13 +5,14 @@
 
 #define MAX_MURID 100
 #define MAX_NIM 10000
-#define MAX_KELAS 9
+#define MAX_KELAS 20
 
 struct Mahasiswa {
     char nama[MAX_MURID][50];
     int nim[MAX_MURID];
     char mataKuliah[MAX_MURID][50];
     char waktuHadir[MAX_MURID][30];
+    char tanggal[MAX_MURID][50];
     int dataKehadiran[MAX_MURID];
     char dosen[MAX_KELAS][50];
 };
@@ -126,8 +127,10 @@ char nama[50];
     time_t t;
     time(&t);
     strftime(mhsw->waktuHadir[*nomMhsw], sizeof(mhsw->waktuHadir[*nomMhsw]),
-             "%Y-%m-%d %H:%M:%S", localtime(&t));
-
+             "%H:%M:%S", localtime(&t));
+    strftime(mhsw->tanggal[*nomMhsw], sizeof(mhsw->tanggal[*nomMhsw]),
+             "%Y-%m-%d", localtime(&t));
+    
     mhsw->nim[*nomMhsw] = nim;
     strcpy(mhsw->mataKuliah[*nomMhsw], mataKuliah);
     mhsw->dataKehadiran[*nomMhsw] = 1;
@@ -137,4 +140,24 @@ char nama[50];
 
     (*nomMhsw)++;
     return 0; 
+}
+
+int tampilkanData(struct Mahasiswa *mhsw, int nomMhsw, const char *pilihMataKuliah, int totalMahasiswa, int Pilih,
+                  struct Dosen dosenMap[]) {
+    printf("\nKehadiran untuk %s (%s):\n", pilihMataKuliah, dosenMap[Pilih - 1].nama);
+
+    printf("| %-30s | %-15s | %-15s | %-30s |\n", "Nama", "NIM", "Tanggal", "Waktu Kehadiran");
+    printf("|--------------------------------|-----------------|-----------------|--------------------------------|\n");
+
+    for (int i = 0; i < nomMhsw; i++) {
+        if (strcmp(mhsw->mataKuliah[i], pilihMataKuliah) == 0) {
+            printf("| %-30s | %-15d | %-15s | %-30s |\n",
+                   mhsw->nama[i], mhsw->nim[i], mhsw->tanggal[i], mhsw->waktuHadir[i]);
+        }
+    }
+
+    printf("|--------------------------------|-----------------|-----------------|--------------------------------|\n");
+
+    printf("\nMahasiswa yang terdata: %d/%d\n", nomMhsw, totalMahasiswa);
+    return 1;
 }
