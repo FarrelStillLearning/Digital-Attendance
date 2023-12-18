@@ -105,7 +105,11 @@ char pilihMataKuliah[50];
     return 0;
 }
 
-int nim;
+int pendataanKehadiran(struct Mahasiswa *mhsw, int *nomMhsw, const char *mataKuliah,
+                        struct dataNimNama nimNamaMap[], int *nomNimNamaMap, struct Dosen dosenMap[], int *nomDosenMap,
+                        int totalMahasiswa, int Pilih) {
+
+    int nim;
     printf("Masukkan NIM (0 untuk melihat data): ");
     scanf("%d", &nim);
 
@@ -120,10 +124,10 @@ int nim;
         }
     }
 
-char nama[50];
+    char nama[50];
     int nimIndex = -1;
 
-    for (int i = 0; i < *numNimNamaMap; i++) {
+    for (int i = 0; i < *nomNimNamaMap; i++) {
         if (nimNamaMap[i].nim == nim) {
             strcpy(nama, nimNamaMap[i].nama);
             nimIndex = i;
@@ -141,13 +145,16 @@ char nama[50];
         return 0;
     }
 
+    strcpy(mhsw->nama[*nomMhsw], nama);
+    mhsw->nama[*nomMhsw][sizeof(mhsw->nama[*nomMhsw]) - 1] = '\0';
+
     time_t t;
     time(&t);
     strftime(mhsw->waktuHadir[*nomMhsw], sizeof(mhsw->waktuHadir[*nomMhsw]),
              "%H:%M:%S", localtime(&t));
     strftime(mhsw->tanggal[*nomMhsw], sizeof(mhsw->tanggal[*nomMhsw]),
              "%Y-%m-%d", localtime(&t));
-    
+
     mhsw->nim[*nomMhsw] = nim;
     strcpy(mhsw->mataKuliah[*nomMhsw], mataKuliah);
     mhsw->dataKehadiran[*nomMhsw] = 1;
