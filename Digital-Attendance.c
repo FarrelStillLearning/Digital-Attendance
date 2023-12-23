@@ -145,11 +145,11 @@ int pendataanKehadiran(struct Mahasiswa *mhsw, int *nomMhsw, const char *mataKul
         printf("Mahasiswa di kelas ini sudah mencapai batas maksimum.\n");
         return 0;
     }
-    // Menentukan waktu yang diizinkan
-    int start_hour = 13; // Jam mulai
-    int end_hour = 14;   // Jam selesai
+    
+    int start_hour = 13; 
+    int end_hour = 14;   
 
-    // Waktu mulai absensi
+    
     struct tm start_time = {0};
     start_time.tm_hour = start_hour;
     start_time.tm_min = 0;
@@ -160,19 +160,19 @@ int pendataanKehadiran(struct Mahasiswa *mhsw, int *nomMhsw, const char *mataKul
     struct tm *current_time = localtime(&t);
     int current_hour = current_time->tm_hour;
 
-    // Periksa apakah absensi sudah dimulai
+    
     if (current_hour < start_hour) {
         printf("Peringatan: Absensi belum dimulai. Silakan datang kembali pada pukul %02d:00.\n", start_hour);
         return 0;
     }
 
-    // Periksa apakah absensi sudah selesai
+    
     if (current_hour >= end_hour) {
         printf("Peringatan: Absensi sudah selesai.\n");
         return 0;
     }
 
-    // Peringatan jika terlambat mengisi absen
+    
     if (current_hour > start_hour) {
         printf("Peringatan: Anda telat mengisi absen hari ini!\n");
         return 0;
