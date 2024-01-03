@@ -132,6 +132,34 @@ char pilihMataKuliah[50];
     return 0;
 }
 
+int MataKuliah(char *pilihMataKuliah, int *Pilih) {
+    printf("\nPilih mata kuliah hari ini! (Pilih Menu Matakuliah, 0 untuk keluar):\n");
+    printf("1. Pemrograman Dasar\n");
+    printf("2. Elektronika Dasar\n");
+    printf("3. Matematika Dasar\n");
+    printf("4. Bahasa Inggris\n");
+
+    scanf("%d", Pilih);
+
+    if (*Pilih == 0) {
+        return 0;
+    } else if (*Pilih < 1 || *Pilih > MAX_KELAS) {
+        printf("Pilihan tidak sesuai. Silahkan Pilih Menu Yang Ada.\n");
+        return 0;
+    }
+
+    char mataKuliah[MAX_KELAS][50] = {
+        "Pemrograman Dasar",
+        "Elektronika Dasar",
+        "Matematika Dasar",
+        "Bahasa Inggris",
+    };
+    strcpy(pilihMataKuliah, mataKuliah[*Pilih - 1]);
+    printf("Mata kuliah yang dipilih: %s\n", pilihMataKuliah);
+
+    return 1;
+}
+
 int pendataanKehadiran(struct Mahasiswa *mhsw, int *nomMhsw, const char *mataKuliah,
                         struct dataNimNama nimNamaMap[], int *nomNimNamaMap, struct Dosen dosenMap[], int *nomDosenMap,
                         int totalMahasiswa, int Pilih) {
