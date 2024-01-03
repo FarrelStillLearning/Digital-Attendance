@@ -199,58 +199,42 @@ int pendataanKehadiran(struct Mahasiswa *mhsw, int *nomMhsw, const char *mataKul
         printf("Mahasiswa di kelas ini sudah mencapai batas maksimum.\n");
         return 0;
     }
-    
-    int start_hour = 13; 
-    int end_hour = 14;   
 
-    
-    struct tm start_time = {0};
-    start_time.tm_hour = start_hour;
-    start_time.tm_min = 0;
-    start_time.tm_sec = 0;
+    time_t currentTime;
+    time(&currentTime);
+    struct tm *localTime = localtime(&currentTime);
 
-    time_t t;
-    time(&t);
-    struct tm *current_time = localtime(&t);
-    int current_hour = current_time->tm_hour;
+    int currentMinutes = localTime->tm_hour * 60 + localTime->tm_min;
 
-    
-    if (current_hour < start_hour) {
-        printf("Peringatan: Absensi belum dimulai. Silakan datang kembali pada pukul %02d:00.\n", start_hour);
-        return 0;
-    }
+    int startTime = dosenMap[Pilih - 1].waktuAbsensi.jamMulai * 60 + dosenMap[Pilih - 1].waktuAbsensi.menitMulai;
+    int endTime = dosenMap[Pilih - 1].waktuAbsensi.jamSelesai * 60 + dosenMap[Pilih - 1].waktuAbsensi.menitSelesai;
 
-    
-    if (current_hour >= end_hour) {
-        printf("Peringatan: Absensi sudah selesai.\n");
-        return 0;
-    }
+    double secondsDifference = difftime(currentTime, mktime(localTime));
 
-    
-    if (current_hour > start_hour) {
-        printf("Peringatan: Anda telat mengisi absen hari ini!\n");
-        return 0;
-    }
+    if (currentMinutes >= startTime) {
+        if (currentMinutes > endTime) {
+            printf("Peringatan: Anda terlambat memasukkan NIM! Data tidak akan masuk ke tampilkan data.\n");
+            return 0;
+        }
 
+    strftime(mhsw->waktuHadir[*nomMhsw], sizeof(mhsw->waktuHadir[*nomMhsw]), "%H:%M:%S", localTime);
+    strftime(mhsw->tanggal[*nomMhsw], sizeof(mhsw->tanggal[*nomMhsw]), "%Y-%m-%d", localTime);
+
+    mhsw->nim[*nomMhsw] = nim;
     strcpy(mhsw->nama[*nomMhsw], nama);
     mhsw->nama[*nomMhsw][sizeof(mhsw->nama[*nomMhsw]) - 1] = '\0';
 
-    time_t t;
-    time(&t);
-    strftime(mhsw->waktuHadir[*nomMhsw], sizeof(mhsw->waktuHadir[*nomMhsw]),
-             "%H:%M:%S", localtime(&t));
-    strftime(mhsw->tanggal[*nomMhsw], sizeof(mhsw->tanggal[*nomMhsw]),
-             "%Y-%m-%d", localtime(&t));
-
-    mhsw->nim[*nomMhsw] = nim;
     strcpy(mhsw->mataKuliah[*nomMhsw], mataKuliah);
-    mhsw->dataKehadiran[*nomMhsw] = 1;
+    mhsw->dataKehadiran[*nomMhsw] = currentTime;
 
-    printf("Absensi kehadiran untuk %s. NIM: %d\n", mhsw->nama[*nomMhsw],
-           mhsw->nim[*nomMhsw]);
+    printf("Absensi kehadiran untuk %s. NIM: %d\n", mhsw->nama[*nomMhsw], mhsw->nim[*nomMhsw]);
 
     (*nomMhsw)++;
-    return 0; 
+    } else if (currentMinutes < startTime) {
+    printf("Absensi belum dapat dilakukan pada saat ini.\n");
+    return 0;
+    } 
+    return 0;
 }
 
 int tampilkanData(struct Mahasiswa *mhsw, int nomMhsw, const char *pilihMataKuliah, int totalMahasiswa, int Pilih,
