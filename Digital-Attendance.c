@@ -97,10 +97,36 @@ char pilihMataKuliah[50];
   };
     strcpy(pilihMataKuliah, mataKuliah[Pilih - 1]);
 
- int exitFlag = 0;
+ int nomMhswPerSubject[MAX_KELAS] = {0};
+
+    int exitFlag = 0;
     while (!exitFlag) {
-        exitFlag = pendataanKehadiran(&mhsw, &nomMhsw, pilihMataKuliah, nimNamaMap, &nomNimNamaMap,
-                                       dosenMap, &nomDosenMap, totalMahasiswa, Pilih);
+        printf("\nMenu Mata Kuliah: %s\n", pilihMataKuliah);
+        printf("1. Melakukan Absensi\n");
+        printf("2. Melihat Data Absensi\n");
+        printf("3. Kembali ke Menu Pilihan Mata Kuliah\n");
+
+        int subMenuChoice;
+        printf("Pilih opsi (1-3): ");
+        scanf("%d", &subMenuChoice);
+
+        switch (subMenuChoice) {
+            case 1:
+                pendataanKehadiran(&mhsw, &nomMhswPerSubject[Pilih - 1], pilihMataKuliah, nimNamaMap, &nomNimNamaMap,
+                                   dosenMap, &nomDosenMap, totalMahasiswa, Pilih);
+                break;
+            case 2:
+                tampilkanData(&mhsw, nomMhswPerSubject[Pilih - 1], pilihMataKuliah, totalMahasiswa, Pilih, dosenMap);
+                break;
+            case 3:
+                if (MataKuliah(pilihMataKuliah, &Pilih) == 0) {
+                    printf("Terminating the program.\n");
+                    exit(0);
+                }
+                break;
+            default:
+                printf("Pilihan tidak valid. Silakan pilih lagi.\n");
+        }
     }
 
     return 0;
@@ -143,6 +169,38 @@ int pendataanKehadiran(struct Mahasiswa *mhsw, int *nomMhsw, const char *mataKul
 
     if (*nomMhsw >= MAX_MURID) {
         printf("Mahasiswa di kelas ini sudah mencapai batas maksimum.\n");
+        return 0;
+    }
+    
+    int start_hour = 13; 
+    int end_hour = 14;   
+
+    
+    struct tm start_time = {0};
+    start_time.tm_hour = start_hour;
+    start_time.tm_min = 0;
+    start_time.tm_sec = 0;
+
+    time_t t;
+    time(&t);
+    struct tm *current_time = localtime(&t);
+    int current_hour = current_time->tm_hour;
+
+    
+    if (current_hour < start_hour) {
+        printf("Peringatan: Absensi belum dimulai. Silakan datang kembali pada pukul %02d:00.\n", start_hour);
+        return 0;
+    }
+
+    
+    if (current_hour >= end_hour) {
+        printf("Peringatan: Absensi sudah selesai.\n");
+        return 0;
+    }
+
+    
+    if (current_hour > start_hour) {
+        printf("Peringatan: Anda telat mengisi absen hari ini!\n");
         return 0;
     }
 
