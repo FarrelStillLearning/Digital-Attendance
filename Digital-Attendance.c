@@ -44,11 +44,13 @@ int tampilkanData(struct Mahasiswa *mhsw, int nomMhsw, const char *pilihMataKuli
 int MataKuliah(char *pilihMataKuliah, int *Pilih);
 
 int main() {
+    char pilihMataKuliah[50];
+    int Pilih;
     struct Mahasiswa mhsw;
     int nomMhsw = 0;
-    int totalMahasiswa = 29;
+    int totalMahasiswa = 6;
 
-struct dataNimNama nimNamaMap[MAX_NIM] = {
+    struct dataNimNama nimNamaMap[MAX_NIM] = {
         {2312388, "Farrel Shidqi Lazuardi"},
         {2312601, "Andre Saputra"},
         {2310303, "Ilmi Nurwahidah"},
@@ -57,34 +59,22 @@ struct dataNimNama nimNamaMap[MAX_NIM] = {
         {2309650, "Alfarizi Khoerul Rizal"},
     };
     int nomNimNamaMap = sizeof(nimNamaMap) / sizeof(nimNamaMap[0]);
-    
-struct Dosen dosenMap[MAX_KELAS] = {
-        {"Liptia Venica. S.T., M.T."},
-        {"Dewi Indri Hadi Putri, S.Pd., M.T."},
-        {"Suprih Widodo, S.Si., M.T."},
-        {"Nadia Tiara Antik Sari, M.Pd."},
-        {"Diky Zakaria, S.Pd. M.T."},
-        {"Mahmudah Salwa Gianti, S.Si., M.Eng."},
-        {"Dewi Indri Hadi Putri, S.Pd., M.T."},
-        {"Hisny Fajjrussalam, M.Pd"},
-        {"Diky Zakaria, S.Pd. M.T."},
+
+    struct Dosen dosenMap[MAX_KELAS] = {
+        {"Liptia Venica. S.T., M.T.", {23, 0, 23, 50}, }, 
+        {"Dewi Indri Hadi Putri, S.Pd., M.T.", {9, 0, 9, 30}},
+        {"Suprih Widodo, S.Si., M.T.", {10, 0, 10, 20}},
+        {"Nadia Tiara Antik Sari, M.Pd.", {11, 0, 11, 15}},
     };
     int nomDosenMap = sizeof(dosenMap) / sizeof(dosenMap[0]);
 
-char pilihMataKuliah[50];
     printf("Silahkan Mengisi Absensi!\n");
     printf("\nPilih mata kuliah hari ini! (Pilih Menu Matakuliah, 0 untuk keluar):\n");
     printf("1. Pemrograman Dasar \n");
     printf("2. Elektronika Dasar\n");
     printf("3. Matematika Dasar\n");
     printf("4. Bahasa Inggris\n");
-    printf("5. Dasar Listrik\n");
-    printf("6. Fisika Teknik\n");
-    printf("7. Teknik Digital\n");
-    printf("8. Pendidikan Agama Islam\n");
-    printf("9. Pengantar TIK dan literasi TIK\n");
-    
-    int Pilih;
+
     scanf("%d", &Pilih);
 
     if (Pilih == 0) {
@@ -94,20 +84,15 @@ char pilihMataKuliah[50];
         return 0;
     }
 
-  char mataKuliah[MAX_KELAS][50] = {
+    char mataKuliah[MAX_KELAS][50] = {
         "Pemrograman Dasar",
-        "Dasar Listrik",
-        "Teknik Digital",
-        "Matematika",
-        "Bahasa Inggris",
-        "Pengantar TIK",
         "Elektronika Dasar",
-        "Fisika Teknik",
-        "Pendidikan Agama Islam",
-  };
+        "Matematika Dasar",
+        "Bahasa Inggris",
+    };
     strcpy(pilihMataKuliah, mataKuliah[Pilih - 1]);
 
- int nomMhswPerSubject[MAX_KELAS] = {0};
+    int nomMhswPerSubject[MAX_KELAS] = {0};
 
     int exitFlag = 0;
     while (!exitFlag) {
@@ -171,8 +156,8 @@ int MataKuliah(char *pilihMataKuliah, int *Pilih) {
 }
 
 int pendataanKehadiran(struct Mahasiswa *mhsw, int *nomMhsw, const char *mataKuliah,
-                        struct dataNimNama nimNamaMap[], int *nomNimNamaMap, struct Dosen dosenMap[], int *nomDosenMap,
-                        int totalMahasiswa, int Pilih) {
+                       struct dataNimNama nimNamaMap[], int *nomNimNamaMap, struct Dosen dosenMap[], int *nomDosenMap,
+                       int totalMahasiswa, int Pilih) {
 
     int nim;
     printf("Masukkan NIM (0 untuk melihat data): ");
@@ -180,13 +165,6 @@ int pendataanKehadiran(struct Mahasiswa *mhsw, int *nomMhsw, const char *mataKul
 
     if (nim == 0) {
         return tampilkanData(mhsw, *nomMhsw, mataKuliah, totalMahasiswa, Pilih, dosenMap);
-    }
-
-    for (int i = 0; i < *nomMhsw; i++) {
-        if (mhsw->nim[i] == nim && strcmp(mhsw->mataKuliah[i], mataKuliah) == 0) {
-            printf("NIM %d sudah terdaftar. Anda Tidak dapat melakukan absensi lagi.\n", nim);
-            return 0;
-        }
     }
 
     char nama[50];
@@ -249,6 +227,7 @@ int pendataanKehadiran(struct Mahasiswa *mhsw, int *nomMhsw, const char *mataKul
 
 int tampilkanData(struct Mahasiswa *mhsw, int nomMhsw, const char *pilihMataKuliah, int totalMahasiswa, int Pilih,
                   struct Dosen dosenMap[]) {
+
     printf("\nKehadiran untuk %s (%s):\n", pilihMataKuliah, dosenMap[Pilih - 1].nama);
 
     printf("| %-30s | %-15s | %-15s | %-30s |\n", "Nama", "NIM", "Tanggal", "Waktu Kehadiran");
